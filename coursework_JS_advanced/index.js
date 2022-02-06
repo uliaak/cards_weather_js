@@ -26,12 +26,14 @@ btnNY.addEventListener('click', function() {
     getData(urlNY);
 });
 
-function getData(url) {
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        if(url == urlKiev)
+async function getData(url) {
+
+    const response = await fetch(url)
+    .catch(function(e) {
+        console.log(e.message)
+    });
+    const data  = await response.json();
+    if(url == urlKiev)
         {
             city[0].textContent = data.name;
             cityTemp[0].innerHTML = 'TEMPERATURE: ' + Math.round(data.main.temp-273) + '&deg';
@@ -48,10 +50,8 @@ function getData(url) {
             city[2].textContent = data.name;
             cityTemp[2].innerHTML = 'TEMPERATURE: ' + Math.round(data.main.temp-273) + '&deg';
             feelsLike[2].innerHTML = 'FEELS LIKE: ' + Math.round(data.main.feels_like-273) + '&deg'; 
-        }
-    })
-    .catch(function(e) {
-        console.log(e.message);
-    });
+        }       
 };
+
+
 
