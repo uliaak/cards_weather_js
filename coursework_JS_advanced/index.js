@@ -15,29 +15,33 @@ async function getData(url) {
     return data;  
 };
 
-class showInfo {
-    constructor(info, city, cityTemp, feelsLike) {
+class cityWeather {
+    constructor(info) {
         this.info = info;
         this.city = city;
         this.cityTemp = cityTemp;
         this.feelsLike = feelsLike;
     }
-    show() {
-        this.city.textContent = this.info.name;
-        this.cityTemp.innerHTML = 'TEMPERATURE: ' + Math.round(this.info.main.temp-273) + '&deg';
-        this.feelsLike.innerHTML = 'FEELS LIKE: ' + Math.round(this.info.main.feels_like-273) + '&deg';
+    calcData() {
+        this.city = this.info.name;
+        this.cityTemp = 'TEMPERATURE: ' + Math.round(this.info.main.temp-273) + '&deg';
+        this.feelsLike = 'FEELS LIKE: ' + Math.round(this.info.main.feels_like-273) + '&deg';
     }
 }
 
 btn.addEventListener('click', async function(e) {
     e.preventDefault();
-    let form = document.forms[0];
     let input = document.getElementById("inputCity").value;
-    let url = `http://api.openweathermap.org/data/2.5/weather?q=${input}&appid=${apiKey}`
-    //getData(url);
-    let dataInfo = await getData(url);
-    let infoChild = new showInfo(dataInfo, city, cityTemp, feelsLike);
-    infoChild.show(); 
+    let url = `http://api.openweathermap.org/data/2.5/weather?q=${input}&appid=${apiKey}`;
+    let dataInfo = await getData(url)
+    .catch(function(e) {
+        console.log(e.message)
+    });
+    let infoChild = new cityWeather(dataInfo);
+    infoChild.calcData();
+    city.textContent = infoChild.city;
+    cityTemp.innerHTML = infoChild.cityTemp;
+    feelsLike.innerHTML = infoChild.feelsLike;
 });
 
 
