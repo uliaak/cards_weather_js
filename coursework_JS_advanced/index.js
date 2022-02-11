@@ -17,15 +17,16 @@ async function getData(url) {
 
 class cityWeather {
     constructor(info) {
-        this.info = info;
-        this.city = city;
-        this.cityTemp = cityTemp;
-        this.feelsLike = feelsLike;
+        this.city = info.name;
+        this.cityTemp = info.main.temp;
+        this.feelsLike = info.main.feels_like;
     }
-    calcData() {
-        this.city = this.info.name;
-        this.cityTemp = 'TEMPERATURE: ' + Math.round(this.info.main.temp-273) + '&deg';
-        this.feelsLike = 'FEELS LIKE: ' + Math.round(this.info.main.feels_like-273) + '&deg';
+}
+
+class Utils {
+    ConvertTempFromKtoC(tempinK) {
+        const tempinC = Math.round(tempinK-273);
+        return tempinC;
     }
 }
 
@@ -38,10 +39,10 @@ btn.addEventListener('click', async function(e) {
         console.log(e.message)
     });
     let infoChild = new cityWeather(dataInfo);
-    infoChild.calcData();
+    let utilsChild = new Utils();
     city.textContent = infoChild.city;
-    cityTemp.innerHTML = infoChild.cityTemp;
-    feelsLike.innerHTML = infoChild.feelsLike;
+    cityTemp.innerHTML = 'TEMPERATURE: ' + utilsChild.ConvertTempFromKtoC(infoChild.cityTemp) + '&deg';
+    feelsLike.innerHTML = 'FEELS LIKE: ' + utilsChild.ConvertTempFromKtoC(infoChild.feelsLike) + '&deg';
 });
 
 
