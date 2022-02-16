@@ -1,3 +1,4 @@
+let block = document.querySelector(".city-card");
 let city = document.querySelector('.city-name');
 let cityTemp = document.querySelector('.city-temp');
 let feelsLike = document.querySelector('.feels-like');
@@ -5,14 +6,16 @@ let btn = document.querySelector('.btn');
 let apiKey = 'bf35cac91880cb98375230fb443a116f';
 
 async function getData(url) {
-
-    const response = await fetch(url)
-    .catch(function(e) {
-        console.log(e.message)
-    });
-    const data  = await response.json();
-    console.log(data);
-    return data;  
+    
+    const response = await fetch(url);
+    if(response.status==200)
+    {
+        const data  = await response.json()
+        return data;
+    }
+    else {
+        throw new Error('Something happened. City not found :(');
+    }
 };
 
 class cityWeather {
@@ -35,8 +38,18 @@ btn.addEventListener('click', async function(e) {
     let input = document.getElementById("inputCity").value;
     let url = `http://api.openweathermap.org/data/2.5/weather?q=${input}&appid=${apiKey}`;
     let dataInfo = await getData(url)
-    .catch(function(e) {
-        console.log(e.message)
+    .catch(function(e){
+        city.textContent = '';
+        cityTemp.innerHTML = '';
+        feelsLike.innerHTML = '';
+        let errorSpace = document.createElement('p');
+        errorSpace.className = 'error-message';
+        errorSpace.textContent = e.message;
+        block.prepend(errorSpace); 
+        
+        setTimeout(function() {
+            block.firstChild.remove();   
+        }, 3000) 
     });
     let infoChild = new cityWeather(dataInfo);
     let utilsChild = new Utils();
