@@ -8,7 +8,7 @@ let apiKey = 'bf35cac91880cb98375230fb443a116f';
 async function getData(url) {
     
     const response = await fetch(url);
-    if(response.status>=200 && response.status < 300)
+    if(response.status==200)
     {
         const data  = await response.json()
         return data;
@@ -39,13 +39,16 @@ btn.addEventListener('click', async function(e) {
     let url = `http://api.openweathermap.org/data/2.5/weather?q=${input}&appid=${apiKey}`;
     let dataInfo = await getData(url)
     .catch(function(e){
+        city.textContent = '';
+        cityTemp.innerHTML = '';
+        feelsLike.innerHTML = '';
         let errorSpace = document.createElement('p');
         errorSpace.className = 'error-message';
         errorSpace.textContent = e.message;
         block.prepend(errorSpace); 
         
         setTimeout(function() {
-            block.firstChild.remove();
+            block.firstChild.remove();   
         }, 3000) 
     });
     let infoChild = new cityWeather(dataInfo);
